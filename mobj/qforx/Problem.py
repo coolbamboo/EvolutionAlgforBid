@@ -2,12 +2,11 @@ import geatpy as ea
 import numpy as np
 
 
-class SobjGAProb(ea.Problem):  # 继承Problem父类
+class ProblemMul(ea.Problem):  # 继承Problem父类
 
-    def __init__(self):
-        name = 'SobjGAProb'  # 遗传算法解单目标问题
-        M = 1  # 初始化M（目标维数）
-        maxormins = [-1]  # 初始化maxormins（目标最小最大化标记列表，1：最小化该目标；-1：最大化该目标）
+    def __init__(self, M=2):  # 初始化M（目标维数2）
+        name = 'qforxProblemMul'  # 多目标问题
+        maxormins = [-1] * M  # 初始化maxormins（目标最小最大化标记列表，1：最小化该目标；-1：最大化该目标）
         Dim = 6  # 初始化Dim（决策变量维数）
         varTypes = [1, 1, 1, 1, 1,
                     1]  # 初始化varTypes（决策变量的类型，元素为0表示对应的变量是连续的；1表示是离散的）
@@ -36,7 +35,7 @@ class SobjGAProb(ea.Problem):  # 继承Problem父类
         y3 = X[:, [5]]
         f1 = 2 * x1 + 3 * x2 + 7 * x3 - 10
         f2 = 2 * y1 + 5 * y2 + 7 * y3 - 15
-        f = 0.5 * (f1 + f2) + 0.3 * f1 + 0.2 * f2
+        f = np.hstack([f1, f2])
         # 采用可行性法则处理约束
         CV = np.hstack(
             [x1 + x2 - 10,
@@ -47,4 +46,4 @@ class SobjGAProb(ea.Problem):  # 继承Problem父类
              16 - (y1 + y2 + y3),
              np.abs(x1 + x2 + x3 + y1 + y2 + y3 - 30)
              ])
-        return f1, CV
+        return f, CV

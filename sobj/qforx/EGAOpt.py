@@ -2,7 +2,7 @@ import time
 import geatpy as ea  # import geatpy
 import numpy as np
 
-from SobjGAProb import SobjGAProb
+from Problem import ProblemWFunc, ProblemFunc1, ProblemFunc2
 
 
 # 定义outFunc()函数
@@ -13,13 +13,25 @@ def everygenOut(alg: ea.Algorithm, pop: ea.Population):  # alg 和 pop为outFunc
     print('决策变量：')
     chroms = bestIndi.Phen[0]
     for i in chroms:
-        print('%d,' % i)
+        print('%d,' % i, end='')
 
+'''
+设置使用的问题
+设置输出的文件夹
+'''
+runProb = "Func2"
+outDir = "Func2"
 
 if __name__ == '__main__':
     # 实例化问题对象
-    problem = SobjGAProb()
-
+    if runProb == 'WFunc':
+        problem = ProblemWFunc()
+    elif runProb == 'Func1':
+        problem = ProblemFunc1()
+    elif runProb == 'Func2':
+        problem = ProblemFunc2()
+    else:
+        raise RuntimeError('未设置问题')
     # 构建算法
     algorithm = ea.soea_EGA_templet(
         problem,
@@ -34,12 +46,9 @@ if __name__ == '__main__':
     # 求解
     res = ea.optimize(algorithm,
                       verbose=True,
-                      drawing=0,
+                      drawing=1,
                       outputMsg=True,
-                      drawLog=False,
+                      drawLog=True,
                       saveFlag=True,
-                      dirName='sobjGA_' + str(time.strftime("%Y-%m-%d %Hh-%Mm-%Ss", time.localtime()))
+                      dirName='sobj_qforx_EGA_'+ outDir + str(time.strftime("%Y-%m-%d %Hh-%Mm-%Ss", time.localtime()))
                       )
-    # 结果成功
-    if res['success']:
-        print(res['Vars'][0, 0], res['Vars'][0, 1])
